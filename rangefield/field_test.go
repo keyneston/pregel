@@ -11,6 +11,9 @@ func TestDecodeNoParts(t *testing.T) {
 		"dead dog",
 		"parent/",
 		"node/",
+		"child/of/a/dead/rat",
+		"parent/of/a/dead/rat",
+		"node/of/a/dead/rat",
 	}
 	for _, input := range inputs {
 		actual, actualOK := Decode(input)
