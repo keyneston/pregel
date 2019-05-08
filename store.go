@@ -14,7 +14,7 @@ import (
 )
 
 // NewStore creates a new store with required fields populated.
-func NewStore(region, tableName string) (store *Store, err error) {
+func NewStore(region, tableName string) (store *DynamoDBStore, err error) {
 	conf := &aws.Config{
 		Region: aws.String(region),
 	}
@@ -22,7 +22,7 @@ func NewStore(region, tableName string) (store *Store, err error) {
 	if err != nil {
 		return
 	}
-	store = &Store{
+	store = &DynamoDBStore{
 		Client:    dynamodb.New(sess),
 		TableName: aws.String(tableName),
 		DataTypes: make(map[string]func() interface{}),
@@ -30,8 +30,12 @@ func NewStore(region, tableName string) (store *Store, err error) {
 	return
 }
 
-// Store handles storage of data in DynamoDB.
-type Store struct {
+// In order to test that DynamoDBStore is a valid instance of store, we create
+// a dummy instance, and cast it as a store.
+var _ = Store(&DynamoDBStore{})
+
+// DynamoDBStore handles storage of data in DynamoDB.
+type DynamoDBStore struct {
 	Client                *dynamodb.DynamoDB
 	TableName             *string
 	ConsumedCapacity      float64
@@ -41,7 +45,7 @@ type Store struct {
 }
 
 // RegisterDataType registers a data type.
-func (s *Store) RegisterDataType(f func() interface{}) {
+func (s *DynamoDBStore) RegisterDataType(f func() interface{}) {
 	v := f()
 	t := reflect.TypeOf(v)
 	name := t.Name()
@@ -161,7 +165,7 @@ func getWriteRequests(n Node) (requests []*dynamodb.WriteRequest, err error) {
 	return
 }
 
-func (s *Store) updateCapacityStats(c ...*dynamodb.ConsumedCapacity) {
+func (s *DynamoDBStore) updateCapacityStats(c ...*dynamodb.ConsumedCapacity) {
 	for _, cc := range c {
 		if cc.CapacityUnits != nil {
 			s.ConsumedCapacity += *cc.CapacityUnits
@@ -176,7 +180,7 @@ func (s *Store) updateCapacityStats(c ...*dynamodb.ConsumedCapacity) {
 }
 
 // Put upserts Nodes and Edges into DynamoDB.
-func (s *Store) Put(nodes ...Node) (err error) {
+func (s *DynamoDBStore) Put(nodes ...Node) (err error) {
 	// Map from nodes into the Write Requests.
 	var wrs []*dynamodb.WriteRequest
 	for _, n := range nodes {
@@ -201,7 +205,7 @@ func (s *Store) Put(nodes ...Node) (err error) {
 }
 
 // PutNodeData into the store.
-func (s *Store) PutNodeData(id string, data Data) (err error) {
+func (s *DynamoDBStore) PutNodeData(id string, data Data) (err error) {
 	//TODO: What happens if there isn't a node with that ID?
 	records, err := convertDataToRecords(id, data)
 	if err != nil {
@@ -230,7 +234,7 @@ func (s *Store) PutNodeData(id string, data Data) (err error) {
 }
 
 // PutEdges into the store.
-func (s *Store) PutEdges(parent string, edges ...*Edge) (err error) {
+func (s *DynamoDBStore) PutEdges(parent string, edges ...*Edge) (err error) {
 	records, err := convertNodeEdgesToRecords(parent, edges, nil)
 	if err != nil {
 		return
@@ -257,7 +261,7 @@ func (s *Store) PutEdges(parent string, edges ...*Edge) (err error) {
 }
 
 // PutEdgeData into the store.
-func (s *Store) PutEdgeData(parent, child string, data Data) (err error) {
+func (s *DynamoDBStore) PutEdgeData(parent, child string, data Data) (err error) {
 	//TODO: What happens if there isn't a node with that ID, or a matching Edge?
 	var wrs []*dynamodb.WriteRequest
 	for k, v := range data {
@@ -309,7 +313,7 @@ func errRecordTypeFieldUnhandled(rt rangefield.RangeField) error {
 	return fmt.Errorf("record type of '%T' is not handled", rt)
 }
 
-func (s Store) populateNodeFromRecord(itm map[string]*dynamodb.AttributeValue, n *Node) error {
+func (s DynamoDBStore) populateNodeFromRecord(itm map[string]*dynamodb.AttributeValue, n *Node) error {
 	tf, hasType := itm[fieldRange]
 	if !hasType {
 		return errRecordIsMissingARangeField
@@ -382,7 +386,7 @@ func (s Store) populateNodeFromRecord(itm map[string]*dynamodb.AttributeValue, n
 	}
 }
 
-func (s Store) putData(itm map[string]*dynamodb.AttributeValue, into interface{}) (err error) {
+func (s DynamoDBStore) putData(itm map[string]*dynamodb.AttributeValue, into interface{}) (err error) {
 	delete(itm, fieldID)
 	delete(itm, fieldRange)
 	delete(itm, fieldRecordDataType)
@@ -391,7 +395,7 @@ func (s Store) putData(itm map[string]*dynamodb.AttributeValue, into interface{}
 }
 
 // Get retrieves data from DynamoDB.
-func (s *Store) Get(id string) (n Node, ok bool, err error) {
+func (s *DynamoDBStore) Get(id string) (n Node, ok bool, err error) {
 	n = NewNode("")
 
 	q := expression.Key(fieldID).Equal(expression.Value(id))
@@ -400,7 +404,7 @@ func (s *Store) Get(id string) (n Node, ok bool, err error) {
 		WithKeyCondition(q).
 		Build()
 	if err != nil {
-		err = fmt.Errorf("Store.Get: failed to build query: %v", err)
+		err = fmt.Errorf("DynamoDBStore.Get: failed to build query: %v", err)
 		return
 	}
 
@@ -428,11 +432,11 @@ func (s *Store) Get(id string) (n Node, ok bool, err error) {
 
 	err = s.Client.QueryPages(qi, page)
 	if err != nil {
-		err = fmt.Errorf("Store.Get: failed to query pages: %v", err)
+		err = fmt.Errorf("DynamoDBStore.Get: failed to query pages: %v", err)
 		return
 	}
 	if pageErr != nil {
-		err = fmt.Errorf("Store.Get: failed to unmarshal data: %v", pageErr)
+		err = fmt.Errorf("DynamoDBStore.Get: failed to unmarshal data: %v", pageErr)
 		return
 	}
 
@@ -441,7 +445,7 @@ func (s *Store) Get(id string) (n Node, ok bool, err error) {
 }
 
 // Delete a node.
-func (s *Store) Delete(id string) (err error) {
+func (s *DynamoDBStore) Delete(id string) (err error) {
 	// Get the IDs.
 	n, ok, err := s.Get(id)
 	if err != nil {
@@ -534,7 +538,7 @@ func (s *Store) Delete(id string) (err error) {
 }
 
 // DeleteEdge deletes an edge.
-func (s *Store) DeleteEdge(parent string, child string) (err error) {
+func (s *DynamoDBStore) DeleteEdge(parent string, child string) (err error) {
 	// Get the IDs.
 	n, ok, err := s.Get(parent)
 	if err != nil {
