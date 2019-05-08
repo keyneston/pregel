@@ -2747,7 +2747,7 @@ func (ec *executionContext) _NodeDataItem(ctx context.Context, sel ast.Selection
 var connectionImplementors = []string{"Connection"}
 
 func (ec *executionContext) _Connection(ctx context.Context, sel ast.SelectionSet, obj *Connection) graphql.Marshaler {
-	fields := graphql.CollectFields(ctx, sel, connectionImplementors)
+	fields := graphql.CollectFields(ec.RequestContext, sel, connectionImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	invalid := false
@@ -2781,7 +2781,7 @@ func (ec *executionContext) _Connection(ctx context.Context, sel ast.SelectionSe
 var edgeImplementors = []string{"Edge"}
 
 func (ec *executionContext) _Edge(ctx context.Context, sel ast.SelectionSet, obj *Edge) graphql.Marshaler {
-	fields := graphql.CollectFields(ctx, sel, edgeImplementors)
+	fields := graphql.CollectFields(ec.RequestContext, sel, edgeImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	invalid := false
@@ -2815,7 +2815,7 @@ func (ec *executionContext) _Edge(ctx context.Context, sel ast.SelectionSet, obj
 var locationImplementors = []string{"Location", "NodeDataItem", "EdgeDataItem"}
 
 func (ec *executionContext) _Location(ctx context.Context, sel ast.SelectionSet, obj *Location) graphql.Marshaler {
-	fields := graphql.CollectFields(ctx, sel, locationImplementors)
+	fields := graphql.CollectFields(ec.RequestContext, sel, locationImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	invalid := false
@@ -2847,7 +2847,7 @@ func (ec *executionContext) _Location(ctx context.Context, sel ast.SelectionSet,
 var mutationImplementors = []string{"Mutation"}
 
 func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
-	fields := graphql.CollectFields(ctx, sel, mutationImplementors)
+	fields := graphql.CollectFields(ec.RequestContext, sel, mutationImplementors)
 
 	ctx = graphql.WithResolverContext(ctx, &graphql.ResolverContext{
 		Object: "Mutation",
@@ -2903,7 +2903,7 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 var nodeImplementors = []string{"Node"}
 
 func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj *pregel.Node) graphql.Marshaler {
-	fields := graphql.CollectFields(ctx, sel, nodeImplementors)
+	fields := graphql.CollectFields(ec.RequestContext, sel, nodeImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	invalid := false
@@ -2966,7 +2966,7 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 var pageInfoImplementors = []string{"PageInfo"}
 
 func (ec *executionContext) _PageInfo(ctx context.Context, sel ast.SelectionSet, obj *PageInfo) graphql.Marshaler {
-	fields := graphql.CollectFields(ctx, sel, pageInfoImplementors)
+	fields := graphql.CollectFields(ec.RequestContext, sel, pageInfoImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	invalid := false
@@ -3002,7 +3002,7 @@ func (ec *executionContext) _PageInfo(ctx context.Context, sel ast.SelectionSet,
 var queryImplementors = []string{"Query"}
 
 func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
-	fields := graphql.CollectFields(ctx, sel, queryImplementors)
+	fields := graphql.CollectFields(ec.RequestContext, sel, queryImplementors)
 
 	ctx = graphql.WithResolverContext(ctx, &graphql.ResolverContext{
 		Object: "Query",
@@ -3043,7 +3043,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 var removeEdgeOutputImplementors = []string{"RemoveEdgeOutput"}
 
 func (ec *executionContext) _RemoveEdgeOutput(ctx context.Context, sel ast.SelectionSet, obj *RemoveEdgeOutput) graphql.Marshaler {
-	fields := graphql.CollectFields(ctx, sel, removeEdgeOutputImplementors)
+	fields := graphql.CollectFields(ec.RequestContext, sel, removeEdgeOutputImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	invalid := false
@@ -3070,7 +3070,7 @@ func (ec *executionContext) _RemoveEdgeOutput(ctx context.Context, sel ast.Selec
 var removeNodeOutputImplementors = []string{"RemoveNodeOutput"}
 
 func (ec *executionContext) _RemoveNodeOutput(ctx context.Context, sel ast.SelectionSet, obj *RemoveNodeOutput) graphql.Marshaler {
-	fields := graphql.CollectFields(ctx, sel, removeNodeOutputImplementors)
+	fields := graphql.CollectFields(ec.RequestContext, sel, removeNodeOutputImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	invalid := false
@@ -3097,7 +3097,7 @@ func (ec *executionContext) _RemoveNodeOutput(ctx context.Context, sel ast.Selec
 var saveEdgeOutputImplementors = []string{"SaveEdgeOutput"}
 
 func (ec *executionContext) _SaveEdgeOutput(ctx context.Context, sel ast.SelectionSet, obj *SaveEdgeOutput) graphql.Marshaler {
-	fields := graphql.CollectFields(ctx, sel, saveEdgeOutputImplementors)
+	fields := graphql.CollectFields(ec.RequestContext, sel, saveEdgeOutputImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	invalid := false
@@ -3129,7 +3129,7 @@ func (ec *executionContext) _SaveEdgeOutput(ctx context.Context, sel ast.Selecti
 var saveNodeOutputImplementors = []string{"SaveNodeOutput"}
 
 func (ec *executionContext) _SaveNodeOutput(ctx context.Context, sel ast.SelectionSet, obj *SaveNodeOutput) graphql.Marshaler {
-	fields := graphql.CollectFields(ctx, sel, saveNodeOutputImplementors)
+	fields := graphql.CollectFields(ec.RequestContext, sel, saveNodeOutputImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	invalid := false
@@ -3156,7 +3156,7 @@ func (ec *executionContext) _SaveNodeOutput(ctx context.Context, sel ast.Selecti
 var setEdgeFieldsOutputImplementors = []string{"SetEdgeFieldsOutput"}
 
 func (ec *executionContext) _SetEdgeFieldsOutput(ctx context.Context, sel ast.SelectionSet, obj *SetEdgeFieldsOutput) graphql.Marshaler {
-	fields := graphql.CollectFields(ctx, sel, setEdgeFieldsOutputImplementors)
+	fields := graphql.CollectFields(ec.RequestContext, sel, setEdgeFieldsOutputImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	invalid := false
@@ -3183,7 +3183,7 @@ func (ec *executionContext) _SetEdgeFieldsOutput(ctx context.Context, sel ast.Se
 var setNodeFieldsOutputImplementors = []string{"SetNodeFieldsOutput"}
 
 func (ec *executionContext) _SetNodeFieldsOutput(ctx context.Context, sel ast.SelectionSet, obj *SetNodeFieldsOutput) graphql.Marshaler {
-	fields := graphql.CollectFields(ctx, sel, setNodeFieldsOutputImplementors)
+	fields := graphql.CollectFields(ec.RequestContext, sel, setNodeFieldsOutputImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	invalid := false
@@ -3210,7 +3210,7 @@ func (ec *executionContext) _SetNodeFieldsOutput(ctx context.Context, sel ast.Se
 var __DirectiveImplementors = []string{"__Directive"}
 
 func (ec *executionContext) ___Directive(ctx context.Context, sel ast.SelectionSet, obj *introspection.Directive) graphql.Marshaler {
-	fields := graphql.CollectFields(ctx, sel, __DirectiveImplementors)
+	fields := graphql.CollectFields(ec.RequestContext, sel, __DirectiveImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	invalid := false
@@ -3249,7 +3249,7 @@ func (ec *executionContext) ___Directive(ctx context.Context, sel ast.SelectionS
 var __EnumValueImplementors = []string{"__EnumValue"}
 
 func (ec *executionContext) ___EnumValue(ctx context.Context, sel ast.SelectionSet, obj *introspection.EnumValue) graphql.Marshaler {
-	fields := graphql.CollectFields(ctx, sel, __EnumValueImplementors)
+	fields := graphql.CollectFields(ec.RequestContext, sel, __EnumValueImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	invalid := false
@@ -3285,7 +3285,7 @@ func (ec *executionContext) ___EnumValue(ctx context.Context, sel ast.SelectionS
 var __FieldImplementors = []string{"__Field"}
 
 func (ec *executionContext) ___Field(ctx context.Context, sel ast.SelectionSet, obj *introspection.Field) graphql.Marshaler {
-	fields := graphql.CollectFields(ctx, sel, __FieldImplementors)
+	fields := graphql.CollectFields(ec.RequestContext, sel, __FieldImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	invalid := false
@@ -3331,7 +3331,7 @@ func (ec *executionContext) ___Field(ctx context.Context, sel ast.SelectionSet, 
 var __InputValueImplementors = []string{"__InputValue"}
 
 func (ec *executionContext) ___InputValue(ctx context.Context, sel ast.SelectionSet, obj *introspection.InputValue) graphql.Marshaler {
-	fields := graphql.CollectFields(ctx, sel, __InputValueImplementors)
+	fields := graphql.CollectFields(ec.RequestContext, sel, __InputValueImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	invalid := false
@@ -3367,7 +3367,7 @@ func (ec *executionContext) ___InputValue(ctx context.Context, sel ast.Selection
 var __SchemaImplementors = []string{"__Schema"}
 
 func (ec *executionContext) ___Schema(ctx context.Context, sel ast.SelectionSet, obj *introspection.Schema) graphql.Marshaler {
-	fields := graphql.CollectFields(ctx, sel, __SchemaImplementors)
+	fields := graphql.CollectFields(ec.RequestContext, sel, __SchemaImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	invalid := false
@@ -3408,7 +3408,7 @@ func (ec *executionContext) ___Schema(ctx context.Context, sel ast.SelectionSet,
 var __TypeImplementors = []string{"__Type"}
 
 func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, obj *introspection.Type) graphql.Marshaler {
-	fields := graphql.CollectFields(ctx, sel, __TypeImplementors)
+	fields := graphql.CollectFields(ec.RequestContext, sel, __TypeImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	invalid := false
