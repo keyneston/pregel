@@ -34,7 +34,7 @@ func (r *Resolver) Query() QueryResolver {
 
 // PregelMutationResolver resolves mutations.
 type PregelMutationResolver struct {
-	Store *pregel.Store
+	Store pregel.Store
 }
 
 // SaveNode saves Nodes.
